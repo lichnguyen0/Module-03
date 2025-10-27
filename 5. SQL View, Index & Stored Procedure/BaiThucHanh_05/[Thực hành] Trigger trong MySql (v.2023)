@@ -1,0 +1,60 @@
+use classicmodels;
+
+/* Cú pháp tạo trigger trong MySQL
+
+CREATE TRIGGER trigger_name
+{BEFORE | AFTER} {INSERT | UPDATE | DELETE}
+ON table_name
+FOR EACH ROW
+BEGIN
+      -- Các hành động được thực hiện trong trigger
+END;*/
+
+/*
+Trong đó:
+• trigger_name là tên của trigger.
+• BEFORE hoặc AFTER xác định thời điểm trigger được kích hoạt.
+• INSERT, UPDATE hoặc DELETE xác định loại sự kiện kích hoạt trigger.
+• table_name là tên bảng mà trigger áp dụng.
+• FOR EACH ROW chỉ ra rằng trigger sẽ được kích hoạt cho mỗi dòng bị ảnh hưởng.
+*/
+
+-- Bước 1: Tạo CSDL và Bảng
+
+CREATE DATABASE company;
+
+
+USE company;
+
+CREATE TABLE employees (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      name VARCHAR(50) NOT NULL,
+      department VARCHAR(50) NOT NULL,
+      salary DECIMAL(10,2) NOT NULL
+);
+
+-- Bước 2: Tạo Trigger
+
+DELIMITER //
+
+CREATE TRIGGER update_department
+before INSERT ON employees
+FOR EACH ROW
+BEGIN
+     IF NEW.salary >= 5000 THEN
+          SET new.department = 'Management';
+     ELSEIF NEW.salary >= 3000 THEN
+          SET new.department = 'Sales';
+     ELSE
+          SET new.department = 'Support';
+     END IF;
+END //
+
+DELIMITER ;
+
+-- Bước 3: Demo sử dụng trigger
+
+INSERT INTO employees (name, department, salary)
+VALUES      ('John Doe', 'A', 3500),
+                    ('Jane Smith', 'A', 2000),
+                    ('David Johnson', 'A', 6000);
