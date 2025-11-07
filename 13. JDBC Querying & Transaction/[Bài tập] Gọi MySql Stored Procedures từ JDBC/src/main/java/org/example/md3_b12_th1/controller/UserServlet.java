@@ -199,7 +199,7 @@ public class UserServlet extends HttpServlet {
 
     // ------------------------- STORED PROCEDURE -------------------------
 
-    // 1️⃣ Hiển thị danh sách users (gọi procedure get_all_users)
+    // Hiển thị danh sách users (gọi procedure get_all_users)
     private void listUserBySP(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ServletException {
         List<User> listUser = userDAO.getAllUsersBySP();
@@ -208,7 +208,7 @@ public class UserServlet extends HttpServlet {
         dispatcher.forward(request, response);
     }
 
-    // 2️⃣ Cập nhật user (gọi procedure update_user_by_id)
+    //  Cập nhật user (gọi procedure update_user_by_id)
     private void updateUserBySP(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ServletException {
         int id = Integer.parseInt(request.getParameter("id"));
@@ -221,7 +221,7 @@ public class UserServlet extends HttpServlet {
         response.sendRedirect("users?action=list-sp");
     }
 
-    // 3️⃣ Xoá user (gọi procedure delete_user_by_id)
+    // Xoá user (gọi procedure delete_user_by_id)
     private void deleteUserBySP(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ServletException {
         int id = Integer.parseInt(request.getParameter("id"));
