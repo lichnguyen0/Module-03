@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="demo-packaging">
+    <output-path>H:/demo</output-path>
+    <root id="archive" name="md3_b14_th1.jar">
+      <element id="module-output" name="md3_b14_th1" />
+    </root>
+  </artifact>
+</component>
