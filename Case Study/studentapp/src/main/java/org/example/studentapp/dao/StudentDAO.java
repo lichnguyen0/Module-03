@@ -1,13 +1,15 @@
 package org.example.studentapp.dao;
 
 import org.example.studentapp.model.Student;
+import org.example.studentapp.util.DBConnection;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class StudentDAO implements IStudentDAO {
-    private String jdbcURL = "jdbc:mysql://localhost:3306/studentdb1?useSSL=false&serverTimezone=UTC";
+
+   /* private String jdbcURL = "jdbc:mysql://localhost:3306/studentdb1?useSSL=false&serverTimezone=UTC";
     private String jdbcUsername = "root";
     private String jdbcPassword = "123456";
 
@@ -19,12 +21,12 @@ public class StudentDAO implements IStudentDAO {
             e.printStackTrace();
         }
         return null;
-    }
+    }*/
 
     @Override
     public void insertStudent(Student student) {
         String sql = "INSERT INTO students (student_code, full_name, class_name, gpa) VALUES (?, ?, ?, ?)";
-        try (Connection conn = getConnection();
+        try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, student.getStudentCode());
             ps.setString(2, student.getFullName());
@@ -39,7 +41,7 @@ public class StudentDAO implements IStudentDAO {
     @Override
     public Student selectStudent(int id) {
         String sql = "SELECT * FROM students WHERE id=?";
-        try (Connection conn = getConnection();
+        try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, id);
             try (ResultSet rs = ps.executeQuery()) {
@@ -63,7 +65,7 @@ public class StudentDAO implements IStudentDAO {
     public List<Student> selectAllStudents() {
         List<Student> students = new ArrayList<>();
         String sql = "SELECT * FROM students";
-        try (Connection conn = getConnection();
+        try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
@@ -84,7 +86,7 @@ public class StudentDAO implements IStudentDAO {
     @Override
     public boolean updateStudent(Student student) {
         String sql = "UPDATE students SET student_code=?, full_name=?, class_name=?, gpa=? WHERE id=?";
-        try (Connection conn = getConnection();
+        try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, student.getStudentCode());
             ps.setString(2, student.getFullName());
@@ -101,7 +103,7 @@ public class StudentDAO implements IStudentDAO {
     @Override
     public boolean deleteStudent(int id) {
         String sql = "DELETE FROM students WHERE id=?";
-        try (Connection conn = getConnection();
+        try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, id);
             return ps.executeUpdate() > 0;
@@ -115,7 +117,7 @@ public class StudentDAO implements IStudentDAO {
     public List<Student> searchByNameOrCode(String keyword) {
         List<Student> students = new ArrayList<>();
         String sql = "SELECT * FROM students WHERE full_name LIKE ? OR student_code LIKE ?";
-        try (Connection conn = getConnection();
+        try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, "%" + keyword + "%");
             ps.setString(2, "%" + keyword + "%");

@@ -1,9 +1,12 @@
 package org.example.studentapp.dao;
 
+import org.example.studentapp.util.DBConnection;
+
 import java.sql.*;
 
 public class AdminDAO {
-    private String jdbcURL = "jdbc:mysql://localhost:3306/studentdb1?useSSL=false&serverTimezone=UTC";
+
+   /* private String jdbcURL = "jdbc:mysql://localhost:3306/studentdb1?useSSL=false&serverTimezone=UTC";
     private String jdbcUsername = "root";
     private String jdbcPassword = "123456";
 
@@ -15,11 +18,11 @@ public class AdminDAO {
             e.printStackTrace();
         }
         return null;
-    }
+    }*/
 
     public boolean checkLogin(String username, String password) {
         String sql = "SELECT * FROM admins WHERE username=? AND password=?";
-        try (Connection conn = getConnection();
+        try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, username);
             ps.setString(2, password);
