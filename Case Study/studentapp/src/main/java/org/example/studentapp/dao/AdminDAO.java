@@ -35,3 +35,12 @@ public class AdminDAO {
         return false;
     }
 }
+
+/*
+* Nhiệm vụ chính của AdminDAO:
+• Kết nối tới database:
+    •Thông qua DBConnection.getConnection(), lớp này có thể lấy Connection để thao tác với database.
+    •Đảm bảo không phải viết lại mã kết nối mỗi lần.
+• Thực hiện kiểm tra đăng nhập:
+    •Phương thức checkLogin(String username, String password) truy vấn bảng admins để xem có tồn tại admin với username và password đã nhập hay không.
+    •Trả về true nếu tìm thấy (login thành công), false nếu không tìm thấy (login thất bại).*/

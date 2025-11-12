@@ -10,7 +10,7 @@ import javax.servlet.http.*;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet("/students")
+@WebServlet("/students") // "/students" tên tự đăt không phải tên gọi trưc tiếp form or database
 public class StudentServlet extends HttpServlet {
     private StudentDAO studentDAO;
 
@@ -19,7 +19,7 @@ public class StudentServlet extends HttpServlet {
         studentDAO = new StudentDAO();
     }
 
-    @Override
+    @Override // doget này có nhiệm vụ lấy dữ liệu hiển thị form: VD: "create" hiển thị form thêm sinh viên mới
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -27,13 +27,13 @@ public class StudentServlet extends HttpServlet {
         if (action == null) action = "";
 
         switch (action) {
-            case "create":
+            case "create":  // "create" lấy từ dòng này <form action="students?action=create" method="post"> của file create.jsp
                 showNewForm(request, response);
                 break;
-            case "edit":
+            case "edit": // tương tự
                 showEditForm(request, response);
                 break;
-            case "delete":
+            case "delete": // tương tự
                 deleteStudent(request, response);
                 break;
             case "search":
@@ -59,26 +59,32 @@ public class StudentServlet extends HttpServlet {
             case "edit":
                 updateStudent(request, response);
                 break;
+            /*tại sao Không có "delete" và "search" vì:
+            "delete": theo chuẩn REST, nên dùng POST/DELETE riêng, không dùng GET vì GET chỉ “lấy dữ liệu”.
+            "search": chỉ là lấy dữ liệu để hiển thị, không thay đổi DB → hợp với GET, không cần POST.*/
         }
     }
 
-    // Hien thi danh sach sinh vien
+    // phương thưc Hien thi danh sach sinh vien của doGet
     private void listStudent(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        List<Student> list = studentDAO.selectAllStudents();
-        request.setAttribute("listStudent", list);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/stu/list.jsp");
-        dispatcher.forward(request, response);
+        List<Student> list = studentDAO.selectAllStudents(); //gọi StudentDAO.<phươngthức> để lấy tất cả sinh viên từ bảng students trong database.
+        request.setAttribute("listStudent", list); //setAttribute gắn dữ liệu vào request với key "listStudent".
+                                                         //Mục đích: để truyền dữ liệu này sang JSP để hiển thị.
+                                                        //Trong JSP bạn sẽ dùng <c:forEach var="student" items="${listStudent}"> hoặc JSTL <c:forEach> để lặp và hiển thị từng sinh viên.
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/stu/list.jsp"); //tạo đối tượng Dispatcher để chuyển request tới file JSP list.jsp.
+        dispatcher.forward(request, response); // forward request và dữ liệu sang JSP.
+                                                //JSP sẽ nhận listStudent từ request và hiển thị lên trình duyệt.
     }
 
-    // Hien thi form tạo moi
+    // Hien thi form tạo moi của doget
     private void showNewForm(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         RequestDispatcher dispatcher = request.getRequestDispatcher("/stu/create.jsp");
         dispatcher.forward(request, response);
     }
 
-    // Hien thi form edit
+    // Hien thi form edit của doget
     private void showEditForm(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         int id = Integer.parseInt(request.getParameter("id"));
@@ -113,7 +119,7 @@ public class StudentServlet extends HttpServlet {
         response.sendRedirect("students");
     }
 
-    // xoa sinh vien
+    // xoa sinh vien của doGet
     private void deleteStudent(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         int id = Integer.parseInt(request.getParameter("id"));
@@ -121,7 +127,7 @@ public class StudentServlet extends HttpServlet {
         response.sendRedirect("students");
     }
 
-    // Tim kiem
+    // Tim kiem của doGet
     private void searchStudent(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String keyword = request.getParameter("keyword");
